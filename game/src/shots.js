@@ -49,26 +49,33 @@ function stageBossShot() {
   G.tide = 12; G.tideState = 'fighting';
   G.gold = 518; G.score = 12480; G.lives = 12;
   G.combo = 4; G.comboTimer = 3; G.bestCombo = 9;
-  const build = [['bubble', 0], ['kelp', 1], ['pearl', 3], ['lantern', 4], ['mortar', 6], ['harpoon', 7], ['pearl', 9], ['mortar', 10], ['lantern', 5]];
+  // (No tower on plot 4: it would sit on the callout subtitle line.)
+  const build = [['bubble', 0], ['kelp', 1], ['pearl', 3], ['mortar', 6], ['harpoon', 7], ['pearl', 2], ['mortar', 10], ['lantern', 5]];
   for (const [id, plot] of build) {
     const def = TOWERS.find(t => t.id === id);
     G.towers.push({ plot, def, level: 2, cd: 0, x: PLOTS[plot].x, y: PLOTS[plot].y });
   }
-  const maw = { type: 'maw', hp: 1450, maxHp: 2600, speed: 34, x: 700, y: 300, wp: 6, slow: 0, slowT: 0, hooked: false, wob: 1, dead: false, gold: 500, size: 74, color: '#3a0ca3', score: 1000, chummed: 0 };
+  // Boss shot staging: the Maw is the star — huge, dead-center below the
+  // callout, drifting slowly toward waypoint 5 (down-right) so it stays clear
+  // of the callout text while the frame is live. Do NOT attach a reeling hook
+  // to it: updateHook would drag it to the boat and kill it mid-capture.
+  const maw = { type: 'maw', hp: 1450, maxHp: 2600, speed: 34, x: 640, y: 420, wp: 5, slow: 0, slowT: 0, hooked: false, wob: 1, dead: false, gold: 500, size: 120, color: '#3a0ca3', score: 1000, chummed: 0 };
   G.boss = maw; G.bossMax = 2600; G.bossPhase = 2;
   G.fish.push(maw);
-  const escorts = [['shark', 560, 380], ['ray', 820, 220], ['eel', 620, 420], ['shark', 880, 380], ['jelly', 760, 180]];
+  const escorts = [['shark', 420, 430], ['ray', 920, 300], ['eel', 880, 470], ['shark', 430, 250], ['jelly', 920, 180]];
   escorts.forEach(([type, x, y], i) => {
     const def = FISH[type];
     G.fish.push({ type, hp: def.hp * 0.7, maxHp: def.hp, speed: def.speed, x, y, wp: 6, slow: 0, slowT: 0, hooked: false, wob: i * 2, dead: false, gold: def.gold, size: def.size, color: def.color, score: def.score, chummed: 0 });
   });
   G.spawnQueue = [{ type: 'shark', gap: 1, hpMul: 1 }, { type: 'ray', gap: 1, hpMul: 1 }];
   G.relics = RELICS.slice(0, 6);
-  G.hooks.push({ x: 690, y: 290, tx: 700, ty: 300, t: 0.2, phase: 'reel', fish: maw, caught: false });
-  G.shots.push({ x: 880, y: 380, tx: 700, ty: 300, t: 0.05 });
-  G.shots.push({ x: 580, y: 230, tx: 700, ty: 300, t: 0.1 });
-  addFloat(700, 200, 'HARPOON! -160', '#e0aaff');
-  addFloat(700, 240, 'HOOKED x4  +34', '#7dffb2');
+  // Hook mid-flight toward the Maw's crown (unattached, so it never reels
+  // the boss away); harpoon shots already striking the boss.
+  G.hooks.push({ x: 650, y: 330, tx: 640, ty: 380, t: 0.15, phase: 'fly', fish: null, caught: false });
+  G.shots.push({ x: 880, y: 380, tx: 700, ty: 400, t: 0.05 });
+  G.shots.push({ x: 580, y: 230, tx: 580, ty: 380, t: 0.1 });
+  addFloat(840, 330, 'HARPOON! -160', '#e0aaff');
+  addFloat(440, 330, 'HOOKED x4  +34', '#7dffb2');
   G.callout = { text: 'KRAKEN SURFACES!', sub: 'The Maw of the Deep — hook its heart!', timer: 2.5 };
   G.bubbles = [{ x: 300, y: 500, r: 5, v: 30 }, { x: 1000, y: 450, r: 4, v: 25 }];
 }

@@ -127,10 +127,17 @@ function drawFish(f) {
     ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(s * 0.55, -s * 0.15, s * 0.16, 0, 6.29); ctx.fill();
     ctx.fillStyle = '#111'; ctx.beginPath(); ctx.arc(s * 0.6, -s * 0.15, s * 0.07, 0, 6.29); ctx.fill();
     if (f.type === 'maw') {
-      // Kraken crown + jaws.
+      // Kraken crown + jaws, scaled to the maw's size.
       ctx.fillStyle = '#2d0a5e';
       for (let k = -2; k <= 2; k++) {
-        ctx.beginPath(); ctx.ellipse(k * 16, -s * 0.8, 7, 22, k * 0.3, 0, 6.29); ctx.fill();
+        ctx.beginPath(); ctx.ellipse(k * s * 0.22, -s * 0.8, s * 0.09, s * 0.3, k * 0.3, 0, 6.29); ctx.fill();
+      }
+      // Tentacles curling below the maw.
+      ctx.strokeStyle = '#2d0a5e'; ctx.lineCap = 'round'; ctx.lineWidth = s * 0.16;
+      for (let k = -2; k <= 2; k++) {
+        const sway = Math.sin(G.time * 3 + k * 1.4) * s * 0.07;
+        ctx.beginPath(); ctx.moveTo(k * s * 0.32, s * 0.45);
+        ctx.quadraticCurveTo(k * s * 0.38 + sway, s * 0.95, k * s * 0.3 + sway * 1.6, s * 1.25); ctx.stroke();
       }
       ctx.fillStyle = '#fff';
       for (let k = 0; k < 5; k++) { ctx.beginPath(); ctx.moveTo(-s * 0.7 + k * 12, s * 0.35); ctx.lineTo(-s * 0.64 + k * 12, s * 0.55); ctx.lineTo(-s * 0.58 + k * 12, s * 0.35); ctx.closePath(); ctx.fill(); }
@@ -258,7 +265,7 @@ function drawHUD() {
   // Boss bar.
   if (G.boss) {
     ctx.fillStyle = 'rgba(6,42,51,0.85)'; rr(340, 84, 600, 40, 10); ctx.fill();
-    text('THE MAW OF THE DEEP — PHASE ' + G.bossPhase + '/3', 640, 98, 15, '#ff8fa3', 'center');
+    text('THE MAW OF THE DEEP — PHASE ' + G.bossPhase + '/3   ·   ' + Math.max(0, Math.ceil(G.boss.hp)) + ' / ' + G.bossMax + ' HP', 640, 98, 15, '#ff8fa3', 'center');
     ctx.fillStyle = '#3a0ca3'; ctx.fillRect(360, 108, 560, 10);
     ctx.fillStyle = '#ff2e63'; ctx.fillRect(360, 108, 560 * Math.max(0, G.boss.hp / G.bossMax), 10);
   }
@@ -299,7 +306,7 @@ function drawHUD() {
     ctx.strokeStyle = '#083344'; ctx.lineWidth = 6;
     ctx.strokeText(G.callout.text, 640, 200);
     text(G.callout.text, 640, 200, 40, '#ffffff', 'center');
-    if (G.callout.sub) text(G.callout.sub, 640, 236, 17, '#fff', 'center');
+    if (G.callout.sub) text(G.callout.sub, 640, 260, 17, '#fff', 'center');
     ctx.globalAlpha = 1;
   }
   if (G.message) { text(G.message, 640, 600, 14, '#ff8fa3', 'center'); }
