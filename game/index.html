@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DEEPHOOK — hook the deep, hold the reef</title>
+<style>
+  html, body { margin: 0; padding: 0; background: #062a33; height: 100%; overflow: hidden; }
+  body { display: flex; align-items: center; justify-content: center; font-family: "Trebuchet MS", Verdana, sans-serif; }
+  #wrap { position: relative; width: 1280px; height: 720px; max-width: 100vw; max-height: 100vh; }
+  canvas { display: block; width: 1280px; height: 720px; max-width: 100vw; max-height: 100vh; background: #7fe3e0; cursor: crosshair; }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <canvas id="game" width="1280" height="720"></canvas>
+</div>
+<script src="src/audio.js"></script>
+<script src="src/data.js"></script>
+<script src="src/engine.js"></script>
+<script src="src/render.js"></script>
+<script src="src/shots.js"></script>
+<script src="src/main.js"></script>
+</body>
+</html>
